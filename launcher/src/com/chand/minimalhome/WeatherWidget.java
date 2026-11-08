@@ -87,17 +87,20 @@ public class WeatherWidget extends LinearLayout {
         if((age>=INTERVAL || age<0)&&!fetching)fetch();
         handler.postDelayed(refresh,60000);
     }
+    public void refreshDisplay(){showCached();}
     public void stop(){active=false;icon.animating=false;handler.removeCallbacks(refresh);}
     private void showCached(){
         long updated=cache.getLong("updated",0);
         if(updated==0)return;
         int code=cache.getInt("code",0);
-        int temp=Math.round(cache.getFloat("temperature",0));
+        boolean fahrenheit=cache.getBoolean("fahrenheit",false);
+        float celsius=cache.getFloat("temperature",0);
+        int temp=Math.round(fahrenheit?celsius*9f/5f+32f:celsius);
         boolean stale=System.currentTimeMillis()-updated>2*INTERVAL;
-        conditions.setText(temp+"°  "+description(code));
+        conditions.setText(temp+"°"+(fahrenheit?"F":"")+"  "+description(code));
         attribution.setText("Open-Meteo · "+(stale?"saved ":"updated ")+new SimpleDateFormat("h:mm a",Locale.getDefault()).format(new Date(updated)));
         icon.code=code;icon.day=cache.getBoolean("day",true);icon.invalidate();
-        setContentDescription(placeName+", "+temp+" degrees Celsius, "+description(code)+(stale?", saved weather":""));
+        setContentDescription(placeName+", "+temp+(fahrenheit?" degrees Fahrenheit, ":" degrees Celsius, ")+description(code)+(stale?", saved weather":""));
     }
     private void fetch(){
         fetching=true;lastAttempt=SystemClock.elapsedRealtime();

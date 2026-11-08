@@ -27,3 +27,17 @@ Hidden tiles stay installed. Use Hidden apps to restore them.
 Select the fan and press OK. It spins while wisps swoop into it, then reports task closures and cache cleanup. A fixed allowlist limits which hidden app tasks can close. Visible tasks, active media, casting and essential TV services are protected. It never calls `am force-stop` or clears app data. Android may retain background services and old history entries.
 
 Cleanup requires local ADB on port 5555. Some TVs show a one-time debugging approval. Without local ADB, basic launcher navigation still works and cleanup reports that it could not complete.
+
+## Settings menu
+
+Open the sidebar, then **Settings**.
+
+| Option | What it does |
+| --- | --- |
+| TV settings, Network | Jump to Android's own settings pages. |
+| Screensavers | Pick Auto, aerial video, drifting clock, aurora, stars or festival ambience. |
+| Clock format | Auto follows the TV's 12/24-hour setting. Choose 12h or 24h to override it. |
+| Clock seconds | Show or hide the seconds beside the clock. Shown by default. |
+| Temperature unit | Switch the weather tile between Celsius and Fahrenheit. Needs a weather location, see [Build from source](build.md). |
+
+Choices are saved on the TV and kept after a restart.

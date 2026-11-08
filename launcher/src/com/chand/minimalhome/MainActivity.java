@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
@@ -1130,7 +1131,30 @@ public class MainActivity extends Activity {
         options.add(new MenuAction("TV settings","Picture, sound and system",R.drawable.ic_settings,()->launch(new Intent(Settings.ACTION_SETTINGS))));
         options.add(new MenuAction("Network",connectedWifiName,R.drawable.ic_wifi,()->launch(new Intent(Settings.ACTION_WIFI_SETTINGS))));
         options.add(new MenuAction("Screensavers","Auto · aerial video and drifting clock",R.drawable.ic_tv,()->showScreensavers(anchor)));
+        options.add(new MenuAction("Clock format","Now: "+getPreferences(MODE_PRIVATE).getString("clockFormat","Auto"),R.drawable.ic_home,()->showClockFormat(anchor)));
+        options.add(new MenuAction("Clock seconds",getPreferences(MODE_PRIVATE).getBoolean("showSeconds",true)?"Shown · select to hide":"Hidden · select to show",R.drawable.ic_home,()->{
+            SharedPreferences p=getPreferences(MODE_PRIVATE);p.edit().putBoolean("showSeconds",!p.getBoolean("showSeconds",true)).apply();
+            updateClock();showQuickSettings(anchor);
+        }));
+        options.add(new MenuAction("Temperature unit",getSharedPreferences("weather",MODE_PRIVATE).getBoolean("fahrenheit",false)?"Fahrenheit · select for Celsius":"Celsius · select for Fahrenheit",R.drawable.ic_settings,()->{
+            SharedPreferences w=getSharedPreferences("weather",MODE_PRIVATE);w.edit().putBoolean("fahrenheit",!w.getBoolean("fahrenheit",false)).apply();
+            weatherWidget.refreshDisplay();showQuickSettings(anchor);
+        }));
         showOptions(anchor,"Settings",options);
+    }
+
+    private void showClockFormat(View anchor) {
+        String current=getPreferences(MODE_PRIVATE).getString("clockFormat","Auto");
+        List<MenuAction> options=new ArrayList<>();
+        String[] names={"Auto","12h","24h"};
+        String[] details={"Follow the TV's system setting","1:30 PM style","13:30 style"};
+        for(int i=0;i<names.length;i++){
+            final String name=names[i];
+            options.add(new MenuAction(name+(current.equals(name)?"  ✓":""),details[i],R.drawable.ic_home,()->{
+                getPreferences(MODE_PRIVATE).edit().putString("clockFormat",name).apply();updateClock();showQuickSettings(anchor);
+            }));
+        }
+        showOptions(anchor,"Clock format",options);
     }
 
     private void showInputs(View anchor) {
@@ -1190,7 +1214,9 @@ public class MainActivity extends Activity {
             if(!initial && !rebuildingApps && !dockCards.isEmpty())buildApps();
         }
         setTextIfChanged(greeting, ThemePalette.festive(selectedTheme) ? "HAPPY "+resolved.toUpperCase(Locale.getDefault()) : h < 5 ? "GOOD NIGHT" : h < 12 ? "GOOD MORNING" : h < 17 ? "GOOD AFTERNOON" : "GOOD EVENING");
-        boolean is24 = android.text.format.DateFormat.is24HourFormat(this);
+        String clockMode = getPreferences(MODE_PRIVATE).getString("clockFormat","Auto");
+        boolean is24 = clockMode.equals("24h") || (!clockMode.equals("12h") && android.text.format.DateFormat.is24HourFormat(this));
+        seconds.setVisibility(getPreferences(MODE_PRIVATE).getBoolean("showSeconds",true) ? View.VISIBLE : View.GONE);
         SimpleDateFormat timeFormat = is24 ? clock24Format : clock12Format;
         timeFormat.setTimeZone(now.getTimeZone());
         dayDateFormat.setTimeZone(now.getTimeZone());

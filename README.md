@@ -45,8 +45,8 @@ Cleanup and DNS are separate choices. Installing the launcher does not automatic
 | Home | Personalize | Useful extras |
 | --- | --- | --- |
 | Five favorites in a low floating dock | Hold OK to move, hide or replace an app | Inputs, Wi-Fi name, Settings and Themes |
-| Original app banners and a soft focus glow | Five vivid colors plus Aurora | Clock with seconds and bold day/date |
-| Down opens All Apps immediately | Telugu festival themes and manual selection | Optional weather (set your own location) |
+| Original app banners and a soft focus glow | Five vivid colors plus Aurora | Clock with optional seconds, Auto/12h/24h format, bold day/date |
+| Down opens All Apps immediately | Telugu festival themes and manual selection | Optional weather, Celsius or Fahrenheit (set your own location) |
 | Back restores the All Apps position | Auto returns to a solid background between festivals | Auto screensavers and drifting clock |
 | Home returns to the favorites dock | Brief festival effects and Deepavali fireworks | Fan cleanup with genie-like wisps |
 
