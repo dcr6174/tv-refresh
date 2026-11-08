@@ -7,7 +7,7 @@ A calm home screen for your TV, with practical guides for cleanup, browsers, DNS
 
 **Native Android launcher · Remote friendly · Android 9+ · No root**
 
-[Start here](docs/start-here.md) · [Get the APK](dist/TVRefresh-v1.0.apk) · [Screenshots](docs/screenshots.md) · [Undo changes](docs/restore.md)
+[Start here](docs/start-here.md) · [Build the APK](docs/build.md) · [Screenshots](docs/screenshots.md) · [Undo changes](docs/restore.md)
 
 <img src="docs/screenshots/home-current.png" alt="TV Refresh on an Android TV: five favorites in a low floating dock and a Dussehra wallpaper" width="100%">
 
@@ -33,7 +33,7 @@ These are screenshots, not performance benchmarks. The before capture includes t
 | **2** | Turn on TV debugging. | Developer options and a debugging switch. |
 | **3** | Connect your computer and choose **Allow** on the TV. | ADB reports `device`. |
 | **4** | Save a backup. | A new backup file on your computer. |
-| **5** | Install the APK and choose TV Refresh as Home. | The five-app dock. |
+| **5** | Build and install the APK, then choose TV Refresh as Home. | The five-app dock. |
 | **6** | Try Home, Back, OK and the arrows. | Apps open and navigation returns where expected. |
 
 **[Follow every step, with commands →](docs/start-here.md)**
@@ -46,7 +46,7 @@ Cleanup and DNS are separate choices. Installing the launcher does not automatic
 | --- | --- | --- |
 | Five favorites in a low floating dock | Hold OK to move, hide or replace an app | Inputs, Wi-Fi name, Settings and Themes |
 | Original app banners and a soft focus glow | Five vivid colors plus Aurora | Clock with seconds and bold day/date |
-| Down opens All Apps immediately | Telugu festival themes and manual selection | Weather integration in source |
+| Down opens All Apps immediately | Telugu festival themes and manual selection | Optional weather (set your own location) |
 | Back restores the All Apps position | Auto returns to a solid background between festivals | Auto screensavers and drifting clock |
 | Home returns to the favorites dock | Brief festival effects and Deepavali fireworks | Fan cleanup with genie-like wisps |
 
@@ -67,7 +67,7 @@ The fan trims eligible temporary caches and closes eligible hidden app tasks wit
 
 For **Android TV and Google TV devices running Android 9 or later**.
 
-Compatibility varies by device and firmware. The included native Inputs integration and HDMI 2 shortcut are vendor-specific; adapt them for your TV. Weather location, app packages and task cleanup also need review. See [device setup](examples/device-setup/README.md). Samsung Tizen and LG webOS do not run this Android APK.
+Compatibility varies by device and firmware. The included native Inputs integration and HDMI 2 shortcut are vendor-specific; adapt them for your TV. Weather location (`launcher/location.example.xml`), app packages and task cleanup also need review. See [device setup](examples/device-setup/README.md). Samsung Tizen and LG webOS do not run this Android APK.
 
 ## Pick a guide
 
@@ -89,7 +89,6 @@ launcher/           Native Java launcher and Windows build script
 tools/              ADB inventory / reversible-disable helper
 examples/device-setup/  Tested-device notes, not a universal debloat list
 docs/               Setup guides and real TV screenshots
-dist/               Versioned APK and SHA-256 checksum
 tests/              Remote-confirmation and task-selection checks
 ```
 

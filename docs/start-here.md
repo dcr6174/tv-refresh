@@ -4,7 +4,7 @@ Do one step at a time. Keep the TV on while you work.
 
 ## 1. Get the files
 
-Download [TVRefresh-v1.0.apk](../dist/TVRefresh-v1.0.apk). Install Google's [Android SDK Platform Tools](https://developer.android.com/tools/releases/platform-tools). Open a terminal in the folder containing `adb`, or add that folder to PATH.
+Build `TVRefresh.apk` by following [Build from source](build.md). Install Google's [Android SDK Platform Tools](https://developer.android.com/tools/releases/platform-tools). Open a terminal in the folder containing `adb`, or add that folder to PATH.
 
 **Check:** `adb version` prints an Android Debug Bridge version.
 
@@ -53,7 +53,7 @@ python tools/tv-refresh.py --serial TV_IP:5555 snapshot
 From the project folder:
 
 ```sh
-adb -s TV_IP:5555 install -r dist/TVRefresh-v1.0.apk
+adb -s TV_IP:5555 install -r launcher/TVRefresh.apk
 ```
 
 **Check:** the result is `Success`.

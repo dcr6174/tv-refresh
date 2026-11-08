@@ -11,7 +11,7 @@ Description: **Less clutter. More TV. A minimal Android TV launcher with guided 
 5. Create the repository.
 6. Upload the contents of this folder or push the prepared Git repository. Avoid adding an extra outer folder.
 7. Open the README and check screenshots, guide links and the APK link.
-8. Create release `v1.0.0`, titled **TV Refresh 1.0 — Less clutter. More TV.** Attach the files in `dist/`.
+8. Create release `v1.0.0`, titled **TV Refresh 1.0 — Less clutter. More TV.** Attach your own signed build and its SHA-256 checksum.
 9. Add topics: `android-tv`, `launcher`, `tcl`, `adb`, `screensaver`, `debloat`.
 
 Only this publication folder/archive is intended for uploading. Private development backups and signing keys are excluded.

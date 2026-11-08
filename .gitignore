@@ -13,3 +13,4 @@ __pycache__/
 work-tests/
 launcher/TVRefresh.apk
 *.idsig
+launcher/res/values/location.xml

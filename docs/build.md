@@ -30,3 +30,7 @@ python tools/check-project.py
 ```
 
 These check confirmation events, task-selection guards, local documentation links and accidental credential files. Vendor input, casting and remote behavior need hardware checks.
+
+## Weather location (optional)
+
+Copy `launcher/location.example.xml` to `launcher/res/values/location.xml`, fill in a place name, latitude and longitude, then rebuild. The file is ignored by git, so your coordinates stay off GitHub. Without it the weather tile is hidden and no weather request is made.

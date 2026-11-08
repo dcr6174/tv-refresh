@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Optional weather location. Copy this file to res/values/location.xml (ignored by git),
+  fill in your own values, then rebuild. Leave location.xml out and the weather widget stays hidden.
+  Find coordinates on any map app; Open-Meteo needs no API key.
+-->
+<resources>
+    <string name="weather_place" translatable="false">YOUR TOWN</string>
+    <string name="weather_latitude" translatable="false">0.0000</string>
+    <string name="weather_longitude" translatable="false">0.0000</string>
+</resources>

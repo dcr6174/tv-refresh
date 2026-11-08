@@ -24,10 +24,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-/** Fixed-location weather; requests only while Home is visible, at 15-minute intervals. */
+/** Weather for a location set in res/values/location.xml (see launcher/location.example.xml); hidden when unset. Requests only while Home is visible, at 15-minute intervals. */
 public class WeatherWidget extends LinearLayout {
     private static final long INTERVAL=15*60*1000L;
-    private static final String ENDPOINT="https://api.open-meteo.com/v1/forecast?latitude=REDACTED_LAT&longitude=REDACTED_LON&current=temperature_2m,weather_code,is_day&timezone=Asia%2FKolkata&forecast_days=1";
+    private final String endpoint, placeName;
+    private final boolean configured;
     private final Handler handler=new Handler(Looper.getMainLooper());
     private final SharedPreferences cache;
     private final TextView conditions, attribution;
@@ -48,16 +49,22 @@ public class WeatherWidget extends LinearLayout {
         super(context);
         setOrientation(HORIZONTAL);setGravity(Gravity.CENTER_VERTICAL);
         cache=context.getSharedPreferences("weather",Context.MODE_PRIVATE);
+        String lat=res(context,"weather_latitude"), lon=res(context,"weather_longitude");
+        String name=res(context,"weather_place");
+        placeName=name.isEmpty()?"WEATHER":name;
+        configured=isNumber(lat,90)&&isNumber(lon,180);
+        endpoint=configured?"https://api.open-meteo.com/v1/forecast?latitude="+lat+"&longitude="+lon+"&current=temperature_2m,weather_code,is_day&timezone=auto&forecast_days=1":"";
+        if(!configured)setVisibility(GONE);
         icon=new WeatherIcon(context);
         addView(icon,new LayoutParams(dp(42),dp(42)));
         LinearLayout text=new LinearLayout(context);text.setOrientation(VERTICAL);
         TextView place=label(14,0xE6FFFFFF,600);
-        place.setText("GOURAIPALLY");place.setLetterSpacing(.08f);
+        place.setText(placeName.toUpperCase(Locale.ROOT));place.setLetterSpacing(.08f);
         conditions=label(18,0xFFF1F6FA,400);conditions.setText("Weather loading");
         attribution=label(7,0x70FFFFFF,400);attribution.setText("Open-Meteo");
         text.addView(place);text.addView(conditions);text.addView(attribution);
         LayoutParams layout=new LayoutParams(-2,-2);layout.setMargins(dp(9),0,0,0);addView(text,layout);
-        setContentDescription("Gouraipally weather, provided by Open-Meteo");
+        setContentDescription(placeName+" weather, provided by Open-Meteo");
         showCached();
     }
     private int dp(float n){return Math.round(n*getResources().getDisplayMetrics().density);}
@@ -65,7 +72,15 @@ public class WeatherWidget extends LinearLayout {
         TextView t=new TextView(getContext());t.setTextSize(size);t.setTextColor(color);t.setSingleLine(true);
         t.setTypeface(getResources().getFont(R.font.outfit));t.setFontVariationSettings("'wght' "+weight);return t;
     }
+    private static String res(Context c,String name){
+        int id=c.getResources().getIdentifier(name,"string",c.getPackageName());
+        return id==0?"":c.getString(id).trim();
+    }
+    private static boolean isNumber(String v,double limit){
+        try{double d=Double.parseDouble(v);return !Double.isNaN(d)&&Math.abs(d)<=limit;}catch(NumberFormatException e){return false;}
+    }
     public void start(){
+        if(!configured)return;
         active=true;icon.animating=true;icon.invalidate();handler.removeCallbacks(refresh);
         showCached();
         long age=System.currentTimeMillis()-cache.getLong("updated",0);
@@ -82,14 +97,14 @@ public class WeatherWidget extends LinearLayout {
         conditions.setText(temp+"°  "+description(code));
         attribution.setText("Open-Meteo · "+(stale?"saved ":"updated ")+new SimpleDateFormat("h:mm a",Locale.getDefault()).format(new Date(updated)));
         icon.code=code;icon.day=cache.getBoolean("day",true);icon.invalidate();
-        setContentDescription("Gouraipally, "+temp+" degrees Celsius, "+description(code)+(stale?", saved weather":""));
+        setContentDescription(placeName+", "+temp+" degrees Celsius, "+description(code)+(stale?", saved weather":""));
     }
     private void fetch(){
         fetching=true;lastAttempt=SystemClock.elapsedRealtime();
         new Thread(()->{
             HttpURLConnection connection=null;
             try{
-                connection=(HttpURLConnection)new URL(ENDPOINT).openConnection();
+                connection=(HttpURLConnection)new URL(endpoint).openConnection();
                 connection.setConnectTimeout(8000);connection.setReadTimeout(8000);
                 connection.setRequestProperty("User-Agent","MinimalHome/1.2 (personal Android TV)");
                 if(connection.getResponseCode()!=200)throw new java.io.IOException("HTTP "+connection.getResponseCode());
@@ -105,7 +120,7 @@ public class WeatherWidget extends LinearLayout {
                 if(!Float.isFinite(temperature)||temperature < -90 || temperature>65)throw new java.io.IOException("Invalid temperature");
                 cache.edit().putFloat("temperature",temperature).putInt("code",code).putBoolean("day",day)
                     .putLong("updated",System.currentTimeMillis()).apply();
-                Log.i("MinimalWeather","Gouraipally updated: "+temperature+" C, WMO "+code);
+                Log.i("MinimalWeather","Weather updated: "+temperature+" C, WMO "+code);
                 handler.post(()->{if(active)showCached();});
             }catch(Exception error){
                 Log.w("MinimalWeather","Weather refresh failed",error);
